@@ -14,32 +14,29 @@ import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 import org.testcontainers.utility.DockerImageName
 
-
 @RunWith(SpringRunner::class)
 @SpringBootTest(classes = [ChallengeApplication::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
-open class ChallengeApplicationTests {
+open class BaseITTest {
 
-	@Autowired
-	lateinit protected var testRestTemplate: TestRestTemplate
+    @Autowired
+    protected lateinit var testRestTemplate: TestRestTemplate
 
-	companion object {
-		@Container
-		private val mongoDBContainer = MongoDBContainer(DockerImageName.parse("mongo:4.4.3"))
+    companion object {
+        @Container
+        private val mongoDBContainer = MongoDBContainer(DockerImageName.parse("mongo:4.4.3"))
 
+        @DynamicPropertySource
+        @JvmStatic
+        fun registerDynamicProperties(registry: DynamicPropertyRegistry) {
+            registry.add("spring.data.mongodb.uri", { "mongodb://localhost:${mongoDBContainer.firstMappedPort}/event?connectTimeoutMS=30000&socketTimeoutMS=30000" })
+        }
 
-		@DynamicPropertySource
-		@JvmStatic
-		fun registerDynamicProperties(registry: DynamicPropertyRegistry) {
-			registry.add("spring.data.mongodb.uri",  { "mongodb://localhost:${mongoDBContainer.firstMappedPort}/event?connectTimeoutMS=30000&socketTimeoutMS=30000" })
-		}
-
-		@BeforeAll
-		@JvmStatic
-		fun beforeAll(){
-			mongoDBContainer.withNetwork(Network.newNetwork())
-			mongoDBContainer.start()
-		}
-
-	}
+        @BeforeAll
+        @JvmStatic
+        fun beforeAll() {
+            mongoDBContainer.withNetwork(Network.newNetwork())
+            mongoDBContainer.start()
+        }
+    }
 }
