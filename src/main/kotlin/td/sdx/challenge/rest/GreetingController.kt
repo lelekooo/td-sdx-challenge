@@ -8,8 +8,9 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/greeting")
 class GreetingController {
-
+    /**
+     * @param name
+     */
     @GetMapping
-    fun sayHelloTo(@RequestParam name : String) = "Hello $name"
-
+    fun sayHelloTo(@RequestParam name: String) = "Hello $name"
 }
