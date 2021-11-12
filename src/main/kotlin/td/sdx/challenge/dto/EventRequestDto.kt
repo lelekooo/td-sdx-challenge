@@ -3,6 +3,6 @@ package td.sdx.challenge.dto
 /**
  * @property reason
  */
-class EventRequestDto(
+open class EventRequestDto(
     val reason: String?
-)
+) : BaseResponseDto()

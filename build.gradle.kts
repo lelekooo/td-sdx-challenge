@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.util.regex.Pattern.compile
 
 plugins {
 	id("org.springframework.boot") version "2.5.6"
@@ -24,6 +25,9 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+
+	implementation("com.twilio.sdk:twilio:8.+")
+
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 
 	ktlint("com.pinterest:ktlint:0.43.0") {
@@ -40,6 +44,7 @@ dependencies {
 	testImplementation("org.testcontainers:testcontainers:$testContainer")
 	testImplementation("org.testcontainers:junit-jupiter:$testContainer")
 	testImplementation("org.testcontainers:mongodb:$testContainer")
+
 }
 
 val outputDir = "${project.buildDir}/reports/ktlint/"

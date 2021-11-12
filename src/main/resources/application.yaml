@@ -4,4 +4,15 @@ server:
 spring:
   data:
     mongodb:
-      uri: "mongodb://localhost:27017/event&connectTimeoutMS=2000"
+      host: ${MONGO_HOST:localhost}
+      port: ${MONGO_PORT:27017}
+
+twilio:
+  accountSid: ${TWILIO_ACCOUNT_SID}
+  authToke:  ${TWILIO_AUTH_TOKEN}
+
+logging:
+  level:
+    root: INFO
+    com:
+      twilio: DEBUG

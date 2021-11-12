@@ -4,4 +4,8 @@ server:
 spring:
   data:
     mongodb:
-      uri: "mongodb://localhost:27017/event&connectTimeoutMS=2000"
+      uri: "mongodb://localhost:27017/event?connectTimeoutMS=2000"
+
+twilio:
+  accountSid: "test"
+  authToke:  "test"
