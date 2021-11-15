@@ -10,10 +10,8 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import td.sdx.challenge.BaseITTest
-import td.sdx.challenge.dto.ErrorMessageDto
 import td.sdx.challenge.dto.EventRequestDto
 import td.sdx.challenge.dto.EventResponseDto
-import td.sdx.challenge.dto.SmsRequestDto
 import td.sdx.challenge.model.Event
 import td.sdx.challenge.model.Message
 import td.sdx.challenge.repository.EventRepository
@@ -21,7 +19,7 @@ import td.sdx.challenge.repository.EventRepository
 class EventControllerIT @Autowired constructor(val eventRepository: EventRepository) : BaseITTest() {
 
     @Test
-    fun testGetEventWithAnIdThatMatchWithADocument_shouldReturnTheEventWithAnOKStatus() {
+    fun `when get event with an id that match with a document should return the event with an ok status`() {
         // given
         val id = ObjectId.get()
         val message = Message("new sms text", "+5511980785634", "+5511980785633", "SMS")
@@ -40,7 +38,7 @@ class EventControllerIT @Autowired constructor(val eventRepository: EventReposit
     }
 
     @Test
-    fun passAnIdThatDoesNotMatchWithAnyEventDocument_shouldReturnAnEmptyBodyWithNotFoundStatus() {
+    fun `when pass an id that does not match with any event document should return an empty body with not found status`() {
         // given
         val id = ObjectId.get()
 
@@ -54,13 +52,13 @@ class EventControllerIT @Autowired constructor(val eventRepository: EventReposit
     }
 
     @Test
-    fun testPostSmsEventWithAValidRequestBody_shouldReturnTheEventWithACreatedStatus() {
+    fun `when post event with a valid request body should return the event created with a created status`() {
         // given
-        val requestBody = SmsRequestDto("sms_text", "+5511982697628", "+5511987304718")
+        val requestBody = EventRequestDto("Test")
         val request: HttpEntity<EventRequestDto> = HttpEntity<EventRequestDto>(requestBody)
 
         // when
-        val response: ResponseEntity<EventResponseDto> = testRestTemplate.postForEntity("/event/sms/send", request)
+        val response: ResponseEntity<EventResponseDto> = testRestTemplate.postForEntity("/event", request)
 
         // then
         val eventResponseDTO = response.body
@@ -68,23 +66,20 @@ class EventControllerIT @Autowired constructor(val eventRepository: EventReposit
         Assert.assertNotNull(eventResponseDTO?.id)
         Assert.assertNotNull(eventResponseDTO?.reason)
         Assert.assertNotNull(eventResponseDTO?.creationDate)
-        Assert.assertNotNull(eventResponseDTO?.content)
     }
 
     @Test
-    fun testPostSmsEventWithAnInvalidRequestBody_shouldReturnErrorMessageBodyWithABadRequestStatus() {
+    fun `when post event with an invalid request body should return empty body with a bad request status`() {
         // given
-        val requestBody = SmsRequestDto("sms_text", null, "+5511987304718")
+        val requestBody = EventRequestDto(null)
         val request: HttpEntity<EventRequestDto> = HttpEntity<EventRequestDto>(requestBody)
 
         // when
-        val response: ResponseEntity<ErrorMessageDto> = testRestTemplate.postForEntity("/event/sms/send", request)
+        val response: ResponseEntity<EventResponseDto> = testRestTemplate.postForEntity("/event", request)
 
         // then
-        val errorMessage = response.body
+        val eventResponseDTO = response.body
         Assert.assertTrue(HttpStatus.BAD_REQUEST == response.statusCode)
-        Assert.assertNotNull(errorMessage?.error)
-        Assert.assertNotNull(errorMessage?.reason)
-        Assert.assertEquals("Field 'from' must not be null", errorMessage?.reason)
+        Assert.assertNull(eventResponseDTO)
     }
 }

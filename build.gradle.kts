@@ -44,6 +44,7 @@ dependencies {
 	testImplementation("org.testcontainers:testcontainers:$testContainer")
 	testImplementation("org.testcontainers:junit-jupiter:$testContainer")
 	testImplementation("org.testcontainers:mongodb:$testContainer")
+	testImplementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 
 }
 

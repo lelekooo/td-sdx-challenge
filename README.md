@@ -11,11 +11,22 @@ Run with docker compose: docker-compose up web
 ```
 #Using the application
 
+###You should be able to create an event using the service:
+
+```
+curl -X POST \
+    http://localhost:8080/event \
+    -H 'Content-Type: application/json' \
+    -d '{
+    "reason": "Reason for the event"
+}'
+```
+
 ###You should be able to send a SMS text using the service:
 
 ```
 curl -X POST \
-    http://localhost:8080/event/sms/send \
+    http://localhost:8080/twilio/sms \
     -H 'Content-Type: application/json' \
     -d '{
     "text": "some_text",
@@ -30,5 +41,4 @@ curl -X GET \
   http://localhost:8080/event/{id} \
   -H 'Accept: application/json' 
 ```
-####The id number be part of the response body from the previous sms send service.
-
+####The id number be part of the response body from the sms send service or from the event creation service.

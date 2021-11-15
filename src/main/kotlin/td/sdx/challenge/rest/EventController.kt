@@ -10,18 +10,17 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import td.sdx.challenge.dto.BaseResponseDto
-import td.sdx.challenge.dto.ErrorMessageDto
+import td.sdx.challenge.dto.EventRequestDto
 import td.sdx.challenge.dto.EventResponseDto
-import td.sdx.challenge.dto.SmsRequestDto
+import td.sdx.challenge.model.Event
 import td.sdx.challenge.repository.EventRepository
-import td.sdx.challenge.usecase.SendSmsMessageFacade
 
 /**
  * @property eventRepository
  */
 @RestController
 @RequestMapping("/event")
-class EventController(val eventRepository: EventRepository, val sendSmsMessageFacade: SendSmsMessageFacade) {
+class EventController(val eventRepository: EventRepository) {
 
     /**
      * @param id
@@ -35,17 +34,14 @@ class EventController(val eventRepository: EventRepository, val sendSmsMessageFa
     }
 
     /**
-     * @param smsEventRequest
+     * @param eventRequest
      * @return
      */
-    @PostMapping("/sms/send")
+    @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    fun smsSend(@RequestBody smsEventRequest: SmsRequestDto?): ResponseEntity<BaseResponseDto> {
-        smsEventRequest?.text ?: return ResponseEntity<BaseResponseDto>(ErrorMessageDto("Field is Required", "Field 'text' must not be null"), HttpStatus.BAD_REQUEST)
-        smsEventRequest.from ?: return ResponseEntity<BaseResponseDto>(ErrorMessageDto("Field is Required", "Field 'from' must not be null"), HttpStatus.BAD_REQUEST)
-        smsEventRequest.to ?: return ResponseEntity<BaseResponseDto>(ErrorMessageDto("Field is Required", "Field to 'must' not be null"), HttpStatus.BAD_REQUEST)
-
-        val event = sendSmsMessageFacade.send(smsEventRequest)
-        return ResponseEntity<BaseResponseDto>(EventResponseDto(event), HttpStatus.CREATED)
+    fun create(@RequestBody eventRequest: EventRequestDto?): ResponseEntity<EventResponseDto> {
+        eventRequest?.reason ?: return ResponseEntity<EventResponseDto>(HttpStatus.BAD_REQUEST)
+        val event = eventRepository.save(Event(reason = eventRequest.reason))
+        return ResponseEntity<EventResponseDto>(EventResponseDto(event), HttpStatus.CREATED)
     }
 }
