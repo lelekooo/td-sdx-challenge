@@ -5,6 +5,11 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
+    environment:
+      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
+      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
+      - MONGO_HOST=${MONGO_HOST}
+      - MONGO_PORT=${MONGO_PORT}
     ports:
       - "8080:8080"
     depends_on:
@@ -13,4 +18,5 @@ services:
     image: "mongo:4.4.3"
     restart: always
     ports:
-      - 27017:27017
+      - "27017:27017"
+    container_name: td-sdx-challenge-mongo

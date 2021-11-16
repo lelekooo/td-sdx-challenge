@@ -14,5 +14,6 @@ import java.time.Instant
 data class Event(
     @Id val id: ObjectId = ObjectId.get(),
     val creationDate: Instant = Instant.now(),
-    val reason: String
+    val reason: String,
+    val content: Message? = null
 )

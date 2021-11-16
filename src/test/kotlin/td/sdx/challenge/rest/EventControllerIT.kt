@@ -1,4 +1,4 @@
-package td.sdx.challenge
+package td.sdx.challenge.rest
 
 import org.bson.types.ObjectId
 import org.junit.Assert
@@ -9,18 +9,21 @@ import org.springframework.boot.test.web.client.postForEntity
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import td.sdx.challenge.BaseITTest
 import td.sdx.challenge.dto.EventRequestDto
 import td.sdx.challenge.dto.EventResponseDto
 import td.sdx.challenge.model.Event
+import td.sdx.challenge.model.Message
 import td.sdx.challenge.repository.EventRepository
 
 class EventControllerIT @Autowired constructor(val eventRepository: EventRepository) : BaseITTest() {
 
     @Test
-    fun testGetEventWithAnIdThatMatchWithADocument_shouldReturnTheEventWithAnOKStatus() {
+    fun `when get event with an id that match with a document should return the event with an ok status`() {
         // given
         val id = ObjectId.get()
-        val event = Event(id = id, reason = "Test Get")
+        val message = Message("new sms text", "+5511980785634", "+5511980785633", "SMS")
+        val event = Event(id = id, reason = "Test Get", content = message)
         eventRepository.save(event)
 
         // when
@@ -35,7 +38,7 @@ class EventControllerIT @Autowired constructor(val eventRepository: EventReposit
     }
 
     @Test
-    fun passAnIdThatDoesNotMatchWithAnyEventDocument_shouldReturnAnEmptyBodyWithNotFoundStatus() {
+    fun `when pass an id that does not match with any event document should return an empty body with not found status`() {
         // given
         val id = ObjectId.get()
 
@@ -49,7 +52,7 @@ class EventControllerIT @Autowired constructor(val eventRepository: EventReposit
     }
 
     @Test
-    fun testPostEventWithAValidRequestBody_shouldReturnTheEventCreatedWithACreatedStatus() {
+    fun `when post event with a valid request body should return the event created with a created status`() {
         // given
         val requestBody = EventRequestDto("Test")
         val request: HttpEntity<EventRequestDto> = HttpEntity<EventRequestDto>(requestBody)
@@ -66,7 +69,7 @@ class EventControllerIT @Autowired constructor(val eventRepository: EventReposit
     }
 
     @Test
-    fun testPostEventWithAnInvalidRequestBody_shouldReturnEmptyBodyWithABadRequestStatus() {
+    fun `when post event with an invalid request body should return empty body with a bad request status`() {
         // given
         val requestBody = EventRequestDto(null)
         val request: HttpEntity<EventRequestDto> = HttpEntity<EventRequestDto>(requestBody)

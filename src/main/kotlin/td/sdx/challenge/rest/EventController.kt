@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
+import td.sdx.challenge.dto.BaseResponseDto
 import td.sdx.challenge.dto.EventRequestDto
 import td.sdx.challenge.dto.EventResponseDto
 import td.sdx.challenge.model.Event
@@ -27,9 +28,9 @@ class EventController(val eventRepository: EventRepository) {
      */
     @GetMapping("/{id}")
     @ResponseStatus(value = HttpStatus.OK)
-    fun findBy(@PathVariable id: String): ResponseEntity<EventResponseDto> {
+    fun findBy(@PathVariable id: String): ResponseEntity<BaseResponseDto> {
         val optEvent = eventRepository.findById(id)
-        return if (optEvent.isPresent) ResponseEntity.ok(EventResponseDto(optEvent.get())) else ResponseEntity<EventResponseDto>(HttpStatus.NOT_FOUND)
+        return if (optEvent.isPresent) ResponseEntity.ok(EventResponseDto(optEvent.get())) else ResponseEntity<BaseResponseDto>(HttpStatus.NOT_FOUND)
     }
 
     /**
