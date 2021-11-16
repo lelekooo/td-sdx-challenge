@@ -2,16 +2,16 @@
 
 #### This project has the intention to get acquainted with the following technologies and processes of the sdx team.
 
-#Running locally
+# Running locally
 ```
 First you need to set yours Twilio credentials in the .env file
 Build the project: ./gradlew clean build
 Build Docker compose: docker-compose build
 Run with docker compose: docker-compose up web
 ```
-#Using the application
+# Using the application
 
-###You should be able to create an event using the service:
+#### You should be able to create an event using the service:
 
 ```
 curl -X POST \
@@ -22,7 +22,7 @@ curl -X POST \
 }'
 ```
 
-###You should be able to send a SMS text using the service:
+#### You should be able to send a SMS text using the service:
 
 ```
 curl -X POST \
@@ -35,10 +35,18 @@ curl -X POST \
 }'
 ```
 
-###To see the status of your event:
+#### To see the status of your event:
 ```
 curl -X GET \
   http://localhost:8080/event/{id} \
   -H 'Accept: application/json' 
 ```
-####The id number be part of the response body from the sms send service or from the event creation service.
+##### The id number be part of the response body from the sms send service or from the event creation service.
+
+#### Service for receiving a call from a Twilio incoming voice call
+```
+curl --location 
+--request POST 'http://localhost:8080/twilio/receive/call' \
+--header 'Accept: application/xml'
+```
+##### This service will generate an XML response that Twilio can interpret and them convert to a voice response.

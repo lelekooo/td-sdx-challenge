@@ -4,6 +4,7 @@ import org.junit.Assert
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.web.client.postForEntity
 import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import td.sdx.challenge.BaseITTest
@@ -47,5 +48,21 @@ class TwilioControllerIT : BaseITTest() {
         Assert.assertNotNull(errorMessage?.error)
         Assert.assertNotNull(errorMessage?.reason)
         Assert.assertEquals("Fields must not be null", errorMessage?.reason)
+    }
+
+    @Test
+    fun `when post a receive call should return the xml response that twilio can read`() {
+        // given
+        val headers = HttpHeaders()
+        headers.add("Accept", "application/xml")
+        val request = HttpEntity<Nothing>(headers)
+
+        // when
+        val response: ResponseEntity<String> = testRestTemplate.postForEntity("/twilio/receive/call", request)
+
+        // then
+        val voiceResponse = response.body
+        Assert.assertTrue(HttpStatus.OK == response.statusCode)
+        Assert.assertNotNull(voiceResponse)
     }
 }
