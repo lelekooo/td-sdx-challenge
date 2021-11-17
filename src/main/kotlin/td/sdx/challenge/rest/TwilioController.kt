@@ -1,6 +1,9 @@
 package td.sdx.challenge.rest
 
+import com.twilio.twiml.VoiceResponse
+import com.twilio.twiml.voice.Say
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -32,5 +35,17 @@ class TwilioController(val sendSmsMessageFacade: SendSmsMessageFacade) {
         }
         val event = sendSmsMessageFacade.send(smsEventRequest)
         return ResponseEntity<BaseResponseDto>(EventResponseDto(event), HttpStatus.CREATED)
+    }
+
+    /**
+     * @return
+     */
+    @PostMapping(value=["/receive/call"], produces = [MediaType.APPLICATION_XML_VALUE])
+    @ResponseStatus(value = HttpStatus.OK)
+    fun receiveCall(): String? {
+        val twiMl: VoiceResponse = VoiceResponse.Builder()
+            .say(Say.Builder("Hello from Leandro").build())
+            .build()
+        return twiMl.toXml()
     }
 }
