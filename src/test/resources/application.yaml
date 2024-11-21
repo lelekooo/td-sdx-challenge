@@ -1,0 +1,12 @@
+server:
+  port: 8080
+
+spring:
+  data:
+    mongodb:
+      uri: "mongodb://localhost:27777/event?connectTimeoutMS=60000"
+
+
+twilio:
+  accountSid: "test"
+  authToke:  "test"
